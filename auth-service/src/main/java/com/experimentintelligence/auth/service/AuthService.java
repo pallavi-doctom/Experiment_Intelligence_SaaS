@@ -1,6 +1,7 @@
 package com.experimentintelligence.auth.service;
 
 import com.experimentintelligence.auth.dto.AuthResponse;
+import com.experimentintelligence.auth.dto.LoginRequest;
 import com.experimentintelligence.auth.dto.RegisterRequest;
 import com.experimentintelligence.auth.entity.Organization;
 import com.experimentintelligence.auth.entity.Role;
@@ -57,6 +58,25 @@ public class AuthService {
                 .role(user.getRole().name())
                 .organizationId(organization.getId().toString())
                 .subscriptionTier(organization.getSubscriptionTier().name())
+                .build();
+    }
+
+    public AuthResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+        }
+
+        String token = jwtService.generateToken(user);
+
+        return AuthResponse.builder()
+                .token(token)
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .organizationId(user.getOrganization().getId().toString())
+                .subscriptionTier(user.getOrganization().getSubscriptionTier().name())
                 .build();
     }
 }

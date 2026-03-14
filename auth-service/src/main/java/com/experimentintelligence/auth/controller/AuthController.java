@@ -1,6 +1,7 @@
 package com.experimentintelligence.auth.controller;
 
 import com.experimentintelligence.auth.dto.AuthResponse;
+import com.experimentintelligence.auth.dto.LoginRequest;
 import com.experimentintelligence.auth.dto.RegisterRequest;
 import com.experimentintelligence.auth.service.AuthService;
 import jakarta.validation.Valid;
@@ -23,5 +24,11 @@ public class AuthController {
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest request) {
         AuthResponse response = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
+        AuthResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
     }
 }
