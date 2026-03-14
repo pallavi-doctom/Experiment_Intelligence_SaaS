@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  auth_db:
+    image: mysql:8.0
+    container_name: auth_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: auth_db
+      MYSQL_USER: auth_user
+      MYSQL_PASSWORD: auth_password
+    ports:
+      - "3309:3306"
+    volumes:
+      - auth_db_data:/var/lib/mysql
+    networks:
+      - experiment_net
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  experiment_db:
+    image: mysql:8.0
+    container_name: experiment_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: experiment_db
+      MYSQL_USER: experiment_user
+      MYSQL_PASSWORD: experiment_password
+    ports:
+      - "3310:3306"
+    volumes:
+      - experiment_db_data:/var/lib/mysql
+    networks:
+      - experiment_net
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  analytics_db:
+    image: mysql:8.0
+    container_name: analytics_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: analytics_db
+      MYSQL_USER: analytics_user
+      MYSQL_PASSWORD: analytics_password
+    ports:
+      - "3311:3306"
+    volumes:
+      - analytics_db_data:/var/lib/mysql
+    networks:
+      - experiment_net
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+volumes:
+  auth_db_data:
+  experiment_db_data:
+  analytics_db_data:
+
+networks:
+  experiment_net:
+    driver: bridge
