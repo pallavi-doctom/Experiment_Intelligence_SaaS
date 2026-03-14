@@ -1,0 +1,15 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: experiment-service
+  datasource:
+    url: jdbc:mysql://localhost:3310/experiment_db
+    username: experiment_user
+    password: experiment_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
