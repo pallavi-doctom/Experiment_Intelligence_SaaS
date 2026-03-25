@@ -43,12 +43,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String email = jwtService.extractEmail(token);
         String role = jwtService.extractRole(token);
-        // String organizationId = jwtService.extractOrganizationId(token); 
-        // Note: organizationId is extracted here but used in Business Logic or Context if needed.
-        // For now, we follow the auth-service pattern of populating the context with email and role.
+        String organizationId = jwtService.extractOrganizationId(token);
+        String userId = jwtService.extractUserId(token);
+
+        UserPrincipal principal = UserPrincipal.builder()
+                .userId(userId)
+                .email(email)
+                .organizationId(organizationId)
+                .role(role)
+                .build();
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                email,
+                principal,
                 null,
                 List.of(new SimpleGrantedAuthority("ROLE_" + role)));
 

@@ -20,6 +20,10 @@ public class JwtService {
         return extractAllClaims(token).getSubject();
     }
 
+    public String extractUserId(String token) {
+        return extractAllClaims(token).get("user_id", String.class);
+    }
+
     public String extractOrganizationId(String token) {
         return extractAllClaims(token).get("organization_id", String.class);
     }
